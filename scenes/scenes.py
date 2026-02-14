@@ -1,5 +1,11 @@
 import pygame
 from abc import ABC, abstractmethod
+from entities.player import Player
+from entities.obstacles import Obstacle
+from managers.collision_manager import CollisionManager
+from utils.logger import Logger
+from managers.enemy_manager import EnemyManager
+from managers.bullet_manager import BulletManager
 
 class Scene(ABC):
     @abstractmethod
@@ -18,7 +24,6 @@ class MenuScene(Scene):
     def handle_events(self, event, scene_manager):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                from utils.logger import Logger
                 Logger.log("Starting game...")
                 scene_manager.switch_scene(GameScene())
 
@@ -37,13 +42,6 @@ class MenuScene(Scene):
 
 class GameScene(Scene):
     def __init__(self):
-        from entities.player import Player
-        from entities.obstacles import Obstacle
-        from managers.collision_manager import CollisionManager
-        from utils.logger import Logger
-        from managers.enemy_manager import EnemyManager
-        from managers.bullet_manager import BulletManager
-        
         self.player = Player(400, 500)
         self.obstacles = [
             Obstacle(100, 100), Obstacle(140, 100), Obstacle(180, 100),
@@ -101,12 +99,10 @@ class GameScene(Scene):
         self.collision_manager.check_bullet_obstacle(self.bullet_manager.bullets, self.obstacles)
 
         if self.enemy_manager.kills >= 10:
-            from utils.logger import Logger
             Logger.log("Mission accomplished! Switching to WinScene.")
             scene_manager.switch_scene(WinScene())
 
         if self.player.health <= 0:
-            from utils.logger import Logger
             Logger.log("Player destroyed! Switching to LoseScene.")
             scene_manager.switch_scene(LoseScene())
 

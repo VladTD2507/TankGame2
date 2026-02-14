@@ -15,7 +15,7 @@ class Enemy(ABC):
         self.shoot_timer = 0
 
     @abstractmethod
-    def move(self, obstacles):
+    def move(self, obstacles, player_rect):
         pass
 
     def shoot(self, bullet_manager):
